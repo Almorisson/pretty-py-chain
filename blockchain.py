@@ -1,7 +1,9 @@
 from functools import reduce
 import hashlib as hl
-from json import dumps
 from collections import OrderedDict
+
+
+from hash_util import hash_string_256, hash_block
 
 # The reward to send to a miner for each complete new mining block
 MINING_REWARD = 10.0
@@ -115,14 +117,6 @@ def print_blockchain_elements():
         print("-" * 20)
 
 
-def hash_block(block):
-    """ Calculate and return the hash of a given block
-        Arguments:
-            :block: The block to hash
-    """
-    return hl.sha256(dumps(block, sort_keys=True).encode()).hexdigest()
-
-
 def valid_proof(transactions, last_hash, proof):
     """
         Check if a Proof Number is valid or not
@@ -132,7 +126,7 @@ def valid_proof(transactions, last_hash, proof):
             :proof: The proof number that we choose to make each hash unique fom the previous one
     """
     guess = (str(transactions) + str(last_hash) + str(proof)).encode()
-    guess_hash = hl.sha256(guess).hexdigest()
+    guess_hash = hash_string_256(guess)
     print("Guess Hash: ", guess_hash)
     return guess_hash[0:2] == "00"
 
