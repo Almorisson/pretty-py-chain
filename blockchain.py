@@ -1,3 +1,5 @@
+import functools
+
 # The reward to send to a miner for each complete new mining block
 MINING_REWARD = 5.0
 
@@ -11,7 +13,7 @@ genesis_block = {
 # Declaring and Initializing the blockchain list
 blockchain = [genesis_block]
 open_transactions = []
-owner = "Morisson"
+owner = "Mountakha"
 participants = {owner}
 
 
@@ -24,13 +26,16 @@ def get_last_blockchain_value():
 
 def get_balance(participant):
     """ Return the balance of a participant passed in parameter """
-    amount_sent = 0.0
-    amount_received = 0.0
     tx_sender = [[tx['amount'] for tx in block['transactions']
                   if tx['sender'] == participant] for block in blockchain]
     tx_open_sender = [tx['amount']
                       for tx in open_transactions if tx['sender'] == participant]
     tx_sender.append(tx_open_sender)
+    amount_sent = functools.reduce(
+        lambda tx_sum, tx_amt: tx_sum + tx_amt[0] if len(tx_amt) > 0 else 0, tx_open_sender, 0)
+    amount_received = functools.reduce(
+        lambda tx_sum, tx_amt: tx_sum + tx_amt if len(tx_amt) > 0 else 0, tx_open_sender, 0)
+
     for tx in tx_sender:
         if len(tx) > 0:
             amount_sent += tx[0]
@@ -71,7 +76,7 @@ def add_transaction(recipient, sender=owner, amount=1.0):
         'recipient': recipient,
         'amount': amount
     }
-    # Check first if the transcation is valid
+    # Check first if the transaction is valid
     if verify_transaction(transaction):
         open_transactions.append(transaction)
         participants.add(recipient)
@@ -190,6 +195,6 @@ while waiting_for_input:
         print_blockchain_elements()
         print("Invalid Blockchain!")
         break
-    print(get_balance(owner))
+    print("Balance of {}: {:6.2f}".format(owner, get_balance(owner)))
 else:
     print("Done!")
