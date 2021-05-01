@@ -1,3 +1,3 @@
 # pretty-py-chain
 
-### TODO: Coming soon - Dockerize the app
+### TODO: Dockerize the app (Coming soon)
