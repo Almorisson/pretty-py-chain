@@ -3,6 +3,7 @@ from functools import reduce
 import hashlib as hl
 from collections import OrderedDict
 from json import dumps, loads
+# from pickle import dumps, loads
 
 # file project imports
 from hash_util import hash_string_256, hash_block
@@ -10,56 +11,68 @@ from hash_util import hash_string_256, hash_block
 # The reward to send to a miner for each complete new mining block
 MINING_REWARD = 10
 
-# Create the genesis Block of the Blockchain
-genesis_block = {
-    'previous_hash': "",
-    'index': 0,
-    'transactions': [],
-    'proof': '2008'
-}
-
 # Declaring and Initializing the blockchain list
-blockchain = [genesis_block]
+blockchain = []
 open_transactions = []
 owner = "Mountakha"
 participants = {owner}
 
 
 def load_data():
-    with open('blockchain.txt', mode='r') as f:
-        file_content = f.readlines()
-        global blockchain
-        global open_transactions
-        blockchain = loads(file_content[0][:-1])
-        updated_blockchain = []
-        for block in blockchain:
-            updated_block = {
-                'previous_hash': block['previous_hash'],
-                'index': block['index'],
-                'proof': block['proof'],
-                'transactions': [OrderedDict([('sender', tx['sender']), ('recipient', tx['recipient']), ('amount', tx['amount'])]) for tx in block['transactions']]
-            }
-            updated_blockchain.append(updated_block)
-        blockchain = updated_blockchain
-        open_transactions = loads(file_content[1])
-        updated_transactions = []
-        for tx in open_transactions:
-            updated_transaction = OrderedDict(
-                [('sender', tx['sender']), ('recipient', tx['recipient']), ('amount', tx['amount'])])
-            updated_transactions.append(updated_transaction)
-        open_transactions = updated_transactions
+    global blockchain
+    global open_transactions
+    try:
+        with open('blockchain.txt', mode='r') as f:
+            file_content = f.readlines()
+            # blockchain = loads(file_content['chain'])
+            # open_transactions = loads(file_content['ot'])
+            blockchain = loads(file_content[0][:-1])
+            updated_blockchain = []
+            for block in blockchain:
+                updated_block = {
+                    'previous_hash': block['previous_hash'],
+                    'index': block['index'],
+                    'proof': block['proof'],
+                    'transactions': [OrderedDict([('sender', tx['sender']), ('recipient', tx['recipient']), ('amount', tx['amount'])]) for tx in block['transactions']]
+                }
+                updated_blockchain.append(updated_block)
+            blockchain = updated_blockchain
+            open_transactions = loads(file_content[1])
+            updated_transactions = []
+            for tx in open_transactions:
+                updated_transaction = OrderedDict(
+                    [('sender', tx['sender']), ('recipient', tx['recipient']), ('amount', tx['amount'])])
+                updated_transactions.append(updated_transaction)
+            open_transactions = updated_transactions
+    except IOError:
+        # Create the genesis Block of the Blockchain
+        genesis_block = {
+            'previous_hash': "",
+            'index': 0,
+            'transactions': [],
+            'proof': '2008'
+        }
+        blockchain = [genesis_block]
+    finally:
+        print("clean up!")
 
-
+# Load the previos state of the blochain
 load_data()
-
 
 def save_data():
     """ Save the blockchain data in a file """
-    with open('blockchain.txt', mode='w') as f:
-        f.write(dumps(blockchain))
-        f.write('\n')
-        f.write(dumps(open_transactions))
-
+    try:
+        with open('blockchain.txt', mode='w') as f:
+            f.write(dumps(blockchain))
+            f.write('\n')
+            f.write(dumps(open_transactions))
+            # data = dumps({
+            #     'chain': blockchain,
+            #     'ot': open_transactions
+            # })
+            # f.write(data)
+    except IOError:
+        print("Faile saving failed!") 
 
 def get_last_blockchain_value():
     """ Return the last blockchain value """
@@ -152,14 +165,14 @@ def get_user_choice():
 
 def print_blockchain_elements():
     """ Prints each block of the Blockchain """
-    counter = 0;
+    counter = 0
     for block in blockchain:
         print("Outputting blocks: \n")
         if counter > 0:
             print(f"Block #{counter}: {block}")
-        print(f"Block genesis: {block}") 
+        print(f"Block genesis: {block}")
         counter += 1
-    else:   
+    else:
         print("-" * 20)
 
 
