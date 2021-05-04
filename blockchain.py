@@ -5,14 +5,13 @@ from json import dumps, loads
 # from pickle import dumps, loads
 
 # file project imports
-from hash_util import hash_string_256, hash_block
+from utility.hash_util import hash_string_256, hash_block
 from block import Block
 from transaction import Transaction
-from verication import Verification
+from utility.verication import Verification
 
 # The reward to send to a miner for each complete new mining block
 MINING_REWARD = 10
-
 
 class Blockchain:
     def __init__(self, hosting_node):
