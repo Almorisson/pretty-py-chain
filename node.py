@@ -1,6 +1,6 @@
 from uuid import uuid4
 
-from verication import Verification
+from utility.verication import Verification
 from blockchain import Blockchain
 
 
@@ -19,7 +19,7 @@ class Node:
         """ Prints each block of the Blockchain """
         counter = 0
         print("\n-----Outputting blocks-----: \n")
-        for block in self.blockchain.chain():
+        for block in self.blockchain.chain:
             if counter > 0:
                 print("Block #{}: {}".format(counter, block))
             print("Block genesis: {}".format(block))
@@ -50,7 +50,7 @@ class Node:
                 pass
             return (tx_recipient, tx_amount)
         except ValueError:
-            print("/!\: Please, enter a correct value !!!")
+            print("/!\r: Please, enter a correct value !!!")
             tx_recipient = input("Please, enter the recipient to send coins: ")
             tx_amount = float(
                 input("Please, enter the amount of coins to sends: "))
@@ -92,7 +92,7 @@ class Node:
             else:
                 print("Input was invalid. Please, pick a value in the list.")
             if not Verification.verify_chain(self.blockchain.chain):
-                print_blockchain_elements(self.blockchain.chain)
+                self.print_blockchain_elements()
                 print("Invalid Blockchain!")
                 # Break out of the loop
                 break
@@ -104,5 +104,6 @@ class Node:
         print("Done!")
 
 
-node = Node()
-node.listent_to_user_input()
+if __name__ == '__main__':
+    node = Node()
+    node.listent_to_user_input()
