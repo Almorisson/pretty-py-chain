@@ -1,6 +1,6 @@
 """Provides verification helper methods."""
-
-from utility.hash_util import hash_block, hash_string_256
+from utility.hash_util import hash_block
+from utility.hash_util import hash_string_256
 from wallet import Wallet
 
 
