@@ -55,8 +55,10 @@ class Wallet:
             :recipient: The recipient of the transaction.
             :amount: The amount of the transaction.
         """
-        signer = PKCS1_v1_5.new(RSA.importKey(binascii.unhexlify(self.private_key)))
-        h = SHA256.new((str(sender) + str(recipient) + str(amount)).encode('utf8'))
+        signer = PKCS1_v1_5.new(RSA.importKey(
+            binascii.unhexlify(self.private_key)))
+        h = SHA256.new((str(sender) + str(recipient) +
+                        str(amount)).encode('utf8'))
         signature = signer.sign(h)
         return binascii.hexlify(signature).decode('ascii')
 
@@ -69,5 +71,6 @@ class Wallet:
         """
         public_key = RSA.importKey(binascii.unhexlify(transaction.sender))
         verifier = PKCS1_v1_5.new(public_key)
-        h = SHA256.new((str(transaction.sender) + str(transaction.recipient) + str(transaction.amount)).encode('utf8'))
+        h = SHA256.new((str(transaction.sender) + str(transaction.recipient) +
+                        str(transaction.amount)).encode('utf8'))
         return verifier.verify(h, binascii.unhexlify(transaction.signature))
