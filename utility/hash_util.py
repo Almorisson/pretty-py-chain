@@ -16,6 +16,5 @@ def hash_block(block):
             :block: The block to hash
     """
     hashable_block = block.__dict__.copy()
-    hashable_block['transactions'] = [tx.to_ordered_dict() for tx in block.transactions]
-    print(hashable_block)
+    hashable_block['transactions'] = [tx.to_ordered_dict() for tx in hashable_block['transactions']]
     return hash_string_256(dumps(hashable_block, sort_keys=True).encode())
