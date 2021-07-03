@@ -16,14 +16,16 @@ MINING_REWARD = 10
 
 print(__name__)
 
+
 class Blockchain:
     """The Blockchain class manages the chain of blocks as well as open transactions and the node on which it's running.
-    
+
     Attributes:
         :chain: The list of blocks
         :open_transactions (private): The list of open transactions
         :hosting_node: The connected node (which runs the blockchain).
     """
+
     def __init__(self, hosting_node_id):
         """The constructor of the Blockchain class."""
         # Our starting block for the blockchain
@@ -41,10 +43,9 @@ class Blockchain:
         return self.__chain[:]
 
     # The setter for the chain property
-    @chain.setter 
+    @chain.setter
     def chain(self, val):
         self.__chain = val
-
 
     def get_open_transactions(self):
         """Returns a copy of the open transactions list."""
@@ -114,7 +115,7 @@ class Blockchain:
         """
         if self.hosting_node == None:
             return None
-        
+
         participant = self.hosting_node
         # Fetch a list of all sent coin amounts for the given person (empty lists are returned if the person was NOT the sender)
         # This fetches sent amounts of transactions that were already included in blocks of the blockchain
@@ -184,7 +185,8 @@ class Blockchain:
         #     'recipient': owner,
         #     'amount': MINING_REWARD
         # }
-        reward_transaction = Transaction('MINING', self.hosting_node, '', MINING_REWARD)
+        reward_transaction = Transaction(
+            'MINING', self.hosting_node, '', MINING_REWARD)
         # Copy transaction instead of manipulating the original open_transactions list
         # This ensures that if for some reason the mining should fail, we don't have the reward transaction stored in the open transactions
         copied_transactions = self.__open_transactions[:]
