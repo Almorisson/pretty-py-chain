@@ -1,9 +1,10 @@
 import json
+
 from flask import Flask, jsonify, request, send_from_directory
 from flask_cors import CORS
 
-from wallet import Wallet
 from blockchain import Blockchain
+from wallet import Wallet
 
 app = Flask(__name__)
 wallet = Wallet()
