@@ -61,10 +61,7 @@ def load_keys():
 def get_balance():
     balance = blockchain.get_balance()
     if balance != None:
-        response = {
-            "message": "Balance fetched successfully!",
-            "balance": balance
-        }
+        response = {"message": "Balance fetched successfully!", "balance": balance}
         return jsonify(response), 200
     else:
         response = {
@@ -82,17 +79,16 @@ def add_transaction():
     else:
         data = request.get_json()
         if not data:
-            response = {
-                "message": "Required data are missing or mal formatted."
-            }
+            response = {"message": "Required data are missing or mal formatted."}
             return jsonify(response), 400
         else:
             required_fields = ["recipient", "amount"]
             if all(field in data for field in required_fields):
                 recipient = data["recipient"]
                 amount = data["amount"]
-                signature = wallet.sign_transaction(wallet.public_key,
-                                                    recipient, amount)
+                signature = wallet.sign_transaction(
+                    wallet.public_key, recipient, amount
+                )
                 transaction = {
                     "sender": wallet.public_key,
                     "recipient": recipient,
@@ -100,7 +96,8 @@ def add_transaction():
                 }
 
                 is_tx_succed = blockchain.add_transaction(
-                    recipient, wallet.public_key, signature, amount)
+                    recipient, wallet.public_key, signature, amount
+                )
                 if is_tx_succed:
                     response = {
                         "message": "Transaction sent successfully!",

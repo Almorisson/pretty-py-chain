@@ -62,11 +62,11 @@ class Node:
                 recipient, amount = tx_data
                 # Add the transaction amount to the blockchain
                 signature = self.wallet.sign_transaction(
-                    self.wallet.public_key, recipient, amount)
-                if self.blockchain.add_transaction(recipient,
-                                                   self.wallet.public_key,
-                                                   signature,
-                                                   amount=amount):
+                    self.wallet.public_key, recipient, amount
+                )
+                if self.blockchain.add_transaction(
+                    recipient, self.wallet.public_key, signature, amount=amount
+                ):
                     print("Added transaction!")
                 else:
                     print("Transaction failed!")
@@ -78,8 +78,8 @@ class Node:
                 self.print_blockchain_elements()
             elif user_choice == "4":
                 if Verification.verify_transactions(
-                        self.blockchain.get_open_transactions(),
-                        self.blockchain.get_balance):
+                    self.blockchain.get_open_transactions(), self.blockchain.get_balance
+                ):
                     print("All transactions are valid")
                 else:
                     print("There are invalid transactions")
@@ -101,8 +101,11 @@ class Node:
                 print("Invalid blockchain!")
                 # Break out of the loop
                 break
-            print("Balance of {}: {:6.2f}".format(
-                self.wallet.public_key, self.blockchain.get_balance()))
+            print(
+                "Balance of {}: {:6.2f}".format(
+                    self.wallet.public_key, self.blockchain.get_balance()
+                )
+            )
         else:
             print("User left!")
 
