@@ -5,10 +5,10 @@ from functools import reduce
 
 from block import Block
 from transaction import Transaction
-# Import two functions from our hash_util.py file. Omit the ".py" in the import
 from utility.hash_util import hash_block
 from utility.verification import Verification
 from wallet import Wallet
+# Import two functions from our hash_util.py file. Omit the ".py" in the import
 
 # The reward we give to miners (for creating a new block)
 MINING_REWARD = 10
