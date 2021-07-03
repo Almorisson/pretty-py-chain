@@ -24,7 +24,6 @@ class Blockchain:
         :open_transactions (private): The list of open transactions
         :hosting_node: The connected node (which runs the blockchain).
     """
-
     def __init__(self, hosting_node_id):
         """The constructor of the Blockchain class."""
         # Our starting block for the blockchain
@@ -63,9 +62,8 @@ class Blockchain:
                 updated_blockchain = []
                 for block in blockchain:
                     converted_tx = [
-                        Transaction(
-                            tx["sender"], tx["recipient"], tx["signature"], tx["amount"]
-                        )
+                        Transaction(tx["sender"], tx["recipient"],
+                                    tx["signature"], tx["amount"])
                         for tx in block["transactions"]
                     ]
                     updated_block = Block(
@@ -81,9 +79,10 @@ class Blockchain:
                 # We need to convert  the loaded data because Transactions should use OrderedDict
                 updated_transactions = []
                 for tx in open_transactions:
-                    updated_transaction = Transaction(
-                        tx["sender"], tx["recipient"], tx["signature"], tx["amount"]
-                    )
+                    updated_transaction = Transaction(tx["sender"],
+                                                      tx["recipient"],
+                                                      tx["signature"],
+                                                      tx["amount"])
                     updated_transactions.append(updated_transaction)
                 self.__open_transactions = updated_transactions
         except (IOError, IndexError):
@@ -96,16 +95,14 @@ class Blockchain:
         try:
             with open("blockchain.txt", mode="w") as f:
                 saveable_chain = [
-                    block.__dict__
-                    for block in [
+                    block.__dict__ for block in [
                         Block(
                             block_el.index,
                             block_el.previous_hash,
                             [tx.__dict__ for tx in block_el.transactions],
                             block_el.proof,
                             block_el.timestamp,
-                        )
-                        for block_el in self.__chain
+                        ) for block_el in self.__chain
                     ]
                 ]
                 f.write(json.dumps(saveable_chain))
@@ -126,7 +123,8 @@ class Blockchain:
         last_hash = hash_block(last_block)
         proof = 0
         # Try different PoW numbers and return the first valid one
-        while not Verification.valid_proof(self.__open_transactions, last_hash, proof):
+        while not Verification.valid_proof(self.__open_transactions, last_hash,
+                                           proof):
             proof += 1
         return proof
 
@@ -135,34 +133,32 @@ class Blockchain:
         participant = self.hosting_node
         # Fetch a list of all sent coin amounts for the given person (empty lists are returned if the person was NOT the sender)
         # This fetches sent amounts of transactions that were already included in blocks of the blockchain
-        tx_sender = [
-            [tx.amount for tx in block.transactions if tx.sender == participant]
-            for block in self.__chain
-        ]
+        tx_sender = [[
+            tx.amount for tx in block.transactions if tx.sender == participant
+        ] for block in self.__chain]
         # Fetch a list of all sent coin amounts for the given person (empty lists are returned if the person was NOT the sender)
         # This fetches sent amounts of open transactions (to avoid double spending)
         open_tx_sender = [
-            tx.amount for tx in self.__open_transactions if tx.sender == participant
+            tx.amount for tx in self.__open_transactions
+            if tx.sender == participant
         ]
         tx_sender.append(open_tx_sender)
         print(tx_sender)
         amount_sent = reduce(
             lambda tx_sum, tx_amt: tx_sum + sum(tx_amt)
-            if len(tx_amt) > 0
-            else tx_sum + 0,
+            if len(tx_amt) > 0 else tx_sum + 0,
             tx_sender,
             0,
         )
         # This fetches received coin amounts of transactions that were already included in blocks of the blockchain
         # We ignore open transactions here because you shouldn't be able to spend coins before the transaction was confirmed + included in a block
-        tx_recipient = [
-            [tx.amount for tx in block.transactions if tx.recipient == participant]
-            for block in self.__chain
-        ]
+        tx_recipient = [[
+            tx.amount for tx in block.transactions
+            if tx.recipient == participant
+        ] for block in self.__chain]
         amount_received = reduce(
             lambda tx_sum, tx_amt: tx_sum + sum(tx_amt)
-            if len(tx_amt) > 0
-            else tx_sum + 0,
+            if len(tx_amt) > 0 else tx_sum + 0,
             tx_recipient,
             0,
         )
@@ -216,7 +212,8 @@ class Blockchain:
         #     'recipient': owner,
         #     'amount': MINING_REWARD
         # }
-        reward_transaction = Transaction("MINING", self.hosting_node, "", MINING_REWARD)
+        reward_transaction = Transaction("MINING", self.hosting_node, "",
+                                         MINING_REWARD)
         # Copy transaction instead of manipulating the original open_transactions list
         # This ensures that if for some reason the mining should fail, we don't have the reward transaction stored in the open transactions
         copied_transactions = self.__open_transactions[:]
@@ -224,7 +221,8 @@ class Blockchain:
             if not Wallet.verify_transaction(tx):
                 return False
         copied_transactions.append(reward_transaction)
-        block = Block(len(self.__chain), hashed_block, copied_transactions, proof)
+        block = Block(len(self.__chain), hashed_block, copied_transactions,
+                      proof)
         self.__chain.append(block)
         self.__open_transactions = []
         self.save_data()
