@@ -191,6 +191,7 @@ class Blockchain:
         for tx in copied_transactions:
             if not Wallet.verify_transaction(tx):
                 return None
+
         copied_transactions.append(reward_transaction)
         block = Block(len(self.__chain), hashed_block,
                       copied_transactions, proof)
