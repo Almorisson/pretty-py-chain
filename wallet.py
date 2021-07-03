@@ -8,6 +8,7 @@ from Crypto.Signature import PKCS1_v1_5
 
 class Wallet:
     """Creates, loads and holds private and public keys. Manages transaction signing and verification."""
+
     def __init__(self):
         self.private_key = None
         self.public_key = None

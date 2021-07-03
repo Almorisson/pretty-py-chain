@@ -12,6 +12,7 @@ class Node:
         :id: The id of the node.
         :blockchain: The blockchain which is run by this node.
     """
+
     def __init__(self):
         # self.id = str(uuid4())
         self.wallet = Wallet()
