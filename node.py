@@ -1,9 +1,6 @@
 import json
 
-from flask import Flask
-from flask import jsonify
-from flask import request
-from flask import send_from_directory
+from flask import Flask, jsonify, request, send_from_directory
 from flask_cors import CORS
 
 from blockchain import Blockchain
